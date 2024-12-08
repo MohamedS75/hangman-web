@@ -1,0 +1,50 @@
+body {
+     background-color: #000;
+     color: #fff;
+     font-family: 'Press Start 2P', cursive;
+     text-align: center;
+     padding: 20px;
+     margin: 0;
+}
+
+h1,
+h2 {
+     color: #fff;
+}
+
+button {
+     background-color: #ff0000;
+     color: white;
+     border: none;
+     padding: 10px 20px;
+     font-size: 16px;
+     cursor: pointer;
+     border-radius: 5px;
+}
+
+button:hover {
+     background-color: #ff3333;
+}
+
+input[type="text"] {
+     padding: 10px;
+     font-size: 16px;
+     border-radius: 5px;
+     border: 1px solid #ccc;
+     margin-bottom: 20px;
+     width: 50%;
+}
+
+@media (max-width: 600px) {
+     body {
+          padding: 10px;
+     }
+
+     input[type="text"] {
+          width: 80%;
+     }
+
+     button {
+          width: 100%;
+     }
+}
