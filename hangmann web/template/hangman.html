@@ -12,19 +12,22 @@
 <body>
      <h1>Jeu du Pendu</h1>
 
-     <h2>Niveau: {{.Level}}</h2>
+     <h2>Niveau: Facile {{.Level}}</h2>
 
      <p><strong>Mot à deviner:</strong> {{.Word}}</p>
 
      <p><strong>Lettres déjà essayées:</strong> {{.Historic}}</p>
 
-
+     <h3>
+          <img src="/{{.Url}}" alt="Image non trouvée">
+     </h3>
 
      <form method="POST" action="/hangman">
           <label for="letter">Proposez une lettre:</label>
           <input type="text" id="letter" name="letter" maxlength="1" required autofocus>
           <button type="submit">Soumettre</button>
      </form>
+
 
 </body>
 

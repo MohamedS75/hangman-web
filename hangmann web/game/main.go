@@ -68,6 +68,25 @@ func getRandomWord(words []string) string {
 }
 
 func hangman(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Query().Get("NewGame") != "" {
+		var words = []string{}
+		if r.URL.Query().Get("NewGame") == "facile" {
+			words, _ = loadWords("words.txt")
+		} else if r.URL.Query().Get("NewGame") == "moyen" {
+			words, _ = loadWords("words2.txt")
+		} else if r.URL.Query().Get("NewGame") == "difficile" {
+			words, _ = loadWords("words3.txt")
+
+		}
+
+		currentGame = Game{
+			WordToGuess: getRandomWord(words),
+			Attempts:    0,
+			MaxAttempts: 10,
+		}
+	}
+
 	if currentGame.WordToGuess == "" {
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
@@ -99,15 +118,40 @@ func hangman(w http.ResponseWriter, r *http.Request) {
 		Historic    string
 		Attempts    int
 		MaxAttempts int
+		WordToGuess string
+		Url 		  string
 	}{
 		Level:       currentGame.Level,
 		Word:        maskedWord,
 		Historic:    currentGame.Historic,
 		Attempts:    currentGame.Attempts,
 		MaxAttempts: currentGame.MaxAttempts,
+		WordToGuess: currentGame.WordToGuess,
 	}
-
-	err := tmpl.Execute(w, data)
+	if data.Attempts == 0 {
+		data.Url = "image/0.png"
+	 } else if data.Attempts == 1 {
+		data.Url = "image/1.png"
+	 } else if data.Attempts == 2 {
+		data.Url = "image/2.png"
+	 } else if data.Attempts == 3 {
+		data.Url = "image/3.png"
+	 } else if data.Attempts == 4 {
+		data.Url = "image/4.png"
+	 } else if data.Attempts == 5 {
+		data.Url = "image/5.png"
+	 } else if data.Attempts == 6 {
+		data.Url = "image/6.png"
+	 } else if data.Attempts == 7 {
+		data.Url = "image/7.png"
+	 } else if data.Attempts == 8 {
+		data.Url = "image/8.png"
+	 } else if data.Attempts == 9 {
+		data.Url = "image/9.png"
+	 } else if data.Attempts == 10 {
+		data.Url = "image/10.png"
+	 }
+	 err := tmpl.Execute(w, data)
 	if err != nil {
 		panic(err)
 	}
@@ -124,7 +168,13 @@ func gameOver(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl := template.Must(template.ParseFiles("../template/gameover.html"))
-	err := tmpl.Execute(w, struct{ Message string }{Message: message})
+	err := tmpl.Execute(w, struct {
+		Message     string
+		WordToGuess string
+	}{
+		Message:     message,
+		WordToGuess: currentGame.WordToGuess,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -152,18 +202,9 @@ func containsRune(historic string, r rune) bool {
 }
 
 func main() {
-	words, err := loadWords("words.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	currentGame = Game{
-		WordToGuess: getRandomWord(words),
-		Attempts:    0,
-		MaxAttempts: 10,
-	}
 
 	http.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("../template/css"))))
+	http.Handle("/image/", http.StripPrefix("/image", http.FileServer(http.Dir("../template/image"))))
 
 	http.HandleFunc("/", index)
 	http.HandleFunc("/hangman", hangman)
