@@ -68,7 +68,7 @@ func getRandomWord(words []string) string {
 }
 
 func hangman(w http.ResponseWriter, r *http.Request) {
-
+// choix niveau 
 	if r.URL.Query().Get("NewGame") != "" {
 		var words = []string{}
 		if r.URL.Query().Get("NewGame") == "facile" {
@@ -79,7 +79,7 @@ func hangman(w http.ResponseWriter, r *http.Request) {
 			words, _ = loadWords("words3.txt")
 
 		}
-
+// tentatives
 		currentGame = Game{
 			WordToGuess: getRandomWord(words),
 			Attempts:    0,
@@ -128,6 +128,7 @@ func hangman(w http.ResponseWriter, r *http.Request) {
 		MaxAttempts: currentGame.MaxAttempts,
 		WordToGuess: currentGame.WordToGuess,
 	}
+	// ajout des images, des vies ( coeurs)
 	if data.Attempts == 0 {
 		data.Url = "image/0.png"
 	 } else if data.Attempts == 1 {
